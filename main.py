@@ -20,7 +20,7 @@ class Node:
 
     def draw(self, surface):        
         if self.is_selected:
-            self.image.fill((220, 220, 255))
+            self.image.fill(DARKER_GHOSTWHITE)
         else:
             self.image.fill(GHOSTWHITE)
 
@@ -119,6 +119,10 @@ class Board:
             for col in range(self.columns):
                 if self.board[row][col].number == 0:
                     empty_space = (row, col)
+                    break
+            
+            if empty_space != None:
+                break
         
         if empty_space == None:
             return True
@@ -130,11 +134,15 @@ class Board:
                 and self.check_mini_square(row, col, num)):
 
                 self.board[row][col].number = num
+                self.draw_board(pygame.display.get_surface())
+                pygame.time.delay(100)
 
                 if self.backtrack() == True:
                     return True
                 
                 self.board[row][col].number = 0
+                self.draw_board(pygame.display.get_surface())
+                pygame.time.delay(100)
 
         return False
 
@@ -163,6 +171,8 @@ class Board:
             
             pygame.draw.line(surface, color, (col * NODE_WIDTH, 0), (col * NODE_WIDTH, BOARD_HEIGHT), width)
         
+        pygame.display.update()
+        
 
 class Game:
     def __init__(self):
@@ -178,7 +188,6 @@ class Game:
 
             self.win.fill(GHOSTWHITE)
             self.board.draw_board(self.win)
-            pygame.display.update()
 
 if __name__ == "__main__":
     game = Game()
